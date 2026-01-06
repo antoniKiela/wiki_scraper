@@ -54,11 +54,6 @@ class BasicScraper(ABC):
     def make_url(self, phrase):
         pass
 
-    # Return HTML of the article
-    @abstractmethod
-    def get_main_content(self, soup):
-        pass 
-
     # Returns text of first paragraph
     @abstractmethod
     def get_first_paragraph(self, phrase):
