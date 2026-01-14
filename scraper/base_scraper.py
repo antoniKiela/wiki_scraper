@@ -74,4 +74,8 @@ class BasicScraper(ABC):
     def get_nth_table(self, phrase):
         pass 
 
+    @abstractmethod
+    def get_all_links(self, soup):
+        pass
+
         

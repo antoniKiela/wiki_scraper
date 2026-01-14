@@ -63,8 +63,12 @@ class TolkienGatewayScraper(BasicScraper):
     def get_all_text(self, soup):
         content = soup.find("div", id="mw-content-text")
         text = content.get_text(separator=" ")
-        words = re.findall(r"[A-Za-zÀ-ÿ]+", text.lower()) # not .split because then 'Ring' and 'Ring:' gives two different words
+        words = re.findall(r"[A-Za-zÀ-ÿ]+", text.lower()) 
+        # not .split because then 'Ring' and 'Ring:' gives two different words
         # This regex means "a string of at least one character without numbers, special characters etc."
 
 
         return words
+
+    def get_all_links(self, soup):
+        pass
