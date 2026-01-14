@@ -2,6 +2,7 @@ from wiki_scraper.scraper.base_scraper import BasicScraper
 import re 
 from bs4 import BeautifulSoup
 import pandas as pd
+from io import StringIO ## bo df = pd.read_html(str(table))[0] bylo deprecated
 
 class TolkienGatewayScraper(BasicScraper):
     def __init__(self):
@@ -18,6 +19,7 @@ class TolkienGatewayScraper(BasicScraper):
         url = url + new_phrase
         return url
     
+    # --summary
     def get_first_paragraph(self, phrase):
         soup = self.fetch_page(phrase)
 
@@ -31,36 +33,36 @@ class TolkienGatewayScraper(BasicScraper):
             if text:
                 return text
 
-
-    
-
-
-    def get_all_text(self, phrase):
-        pass 
-
+    # --table --number
     def get_tables(self, phrase):
         soup = self.fetch_page(phrase)
-        tables = soup.find_all('table')
-        
+
+        content = soup.find("div", id="mw-content-text")
+        if not content:
+            return []
+
+        tables = content.find_all("table")
+
         dataframes = []
         for table in tables:
-            rows = table.find_all('tr')
-            table_data = []
-            
-            for row in rows:
-                cells = row.find_all(['td', 'th'])
-                cell_data = [cell.get_text(strip=True) for cell in cells]
-                if cell_data:
-                    table_data.append(cell_data)
-            
-            if table_data:
-                df = pd.DataFrame(table_data)
+            try:
+                df = pd.read_html(StringIO(str(table)))[0]
                 dataframes.append(df)
-        
+            except ValueError:
+                continue
+
         return dataframes
 
     def get_nth_table(self, phrase, n=0):
         tables = self.get_tables(phrase)
-        if 0 <= n < len(tables):
-            return tables[n]
-        return None
+
+        if n < 0 or n >= len(tables):
+            raise IndexError(
+                f"Table index {n} out of range (found {len(tables)} tables)"
+            )
+
+        return tables[n]
+
+
+    def get_all_text(self, phrase):
+        pass 
