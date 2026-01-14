@@ -21,3 +21,11 @@ class ArticleParser:
 
         return self.scraper.get_first_paragraph(soup)
 
+    def get_table(self, phrase, number, first_row_is_header, use_local_html_file_instead=False):
+        soup = self.get_soup(phrase, use_local_html_file_instead)
+
+        df = self.scraper.get_nth_table(soup, number - 1)
+
+        # Automatic table parsing by pd.read_html for this website creates correct column heads so no need for implementing first_row_is_header
+
+        return df
