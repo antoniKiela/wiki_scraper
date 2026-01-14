@@ -20,9 +20,7 @@ class TolkienGatewayScraper(BasicScraper):
         return url
     
     # --summary
-    def get_first_paragraph(self, phrase):
-        soup = self.fetch_page(phrase)
-
+    def get_first_paragraph(self, soup):
         content = soup.find("div", id="mw-content-text")
 
         for p in content.find_all("p"):
@@ -34,9 +32,7 @@ class TolkienGatewayScraper(BasicScraper):
                 return text
 
     # --table --number
-    def get_tables(self, phrase):
-        soup = self.fetch_page(phrase)
-
+    def get_tables(self, soup):
         content = soup.find("div", id="mw-content-text")
         if not content:
             return []
@@ -53,8 +49,8 @@ class TolkienGatewayScraper(BasicScraper):
 
         return dataframes
 
-    def get_nth_table(self, phrase, n=0):
-        tables = self.get_tables(phrase)
+    def get_nth_table(self, soup, n=0):
+        tables = self.get_tables(soup)
 
         if n < 0 or n >= len(tables):
             raise IndexError(
