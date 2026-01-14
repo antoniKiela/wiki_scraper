@@ -74,9 +74,4 @@ class BasicScraper(ABC):
     def get_nth_table(self, phrase):
         pass 
 
-    # Converts data from table to good format
-    @abstractmethod
-    def extract_table_data(self, table):
-        pass 
-
         
