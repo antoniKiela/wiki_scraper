@@ -60,6 +60,7 @@ class TolkienGatewayScraper(BasicScraper):
         return tables[n]
 
 
+    # --count-words
     def get_all_text(self, soup):
         content = soup.find("div", id="mw-content-text")
         text = content.get_text(separator=" ")
@@ -70,5 +71,19 @@ class TolkienGatewayScraper(BasicScraper):
 
         return words
 
+    # --auto-count-words
     def get_all_links(self, soup):
-        pass
+        content = soup.find("div", id="mw-content-text")
+        if not content:
+            return []
+
+        links = set()
+
+        for a in content.find_all("a", href=True):
+            href = a["href"]
+            if href.startswith("/wiki/") and ':' not in href[len("/wiki/"):]:
+                links.add(href)
+
+        return links
+
+        

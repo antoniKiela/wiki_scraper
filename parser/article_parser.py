@@ -2,6 +2,7 @@ from wiki_scraper.scraper.base_scraper import BasicScraper
 from bs4 import BeautifulSoup
 from pathlib import Path
 import json
+import time
 
 class ArticleParser:
     def __init__(self, scraper):
@@ -9,6 +10,7 @@ class ArticleParser:
 
     def get_soup(self, phrase, use_local_html_file_instead):
         if use_local_html_file_instead == True:
+            phrase = phrase + '.html'
             with open(phrase, 'r', encoding='utf-8') as file:
                 html_content = file.read()
 
@@ -18,11 +20,13 @@ class ArticleParser:
         
         return soup
 
+    # --summary
     def get_summary(self, phrase, use_local_html_file_instead=False):
         soup = self.get_soup(phrase, use_local_html_file_instead)
 
         return self.scraper.get_first_paragraph(soup)
 
+    # --table
     def get_table(self, phrase, number, first_row_is_header, use_local_html_file_instead=False):
         soup = self.get_soup(phrase, use_local_html_file_instead)
 
@@ -32,6 +36,7 @@ class ArticleParser:
 
         return df
 
+    # --count-words
     def get_words(self, phrase, use_local_html_file_instead=False):
         soup = self.get_soup(phrase, use_local_html_file_instead)
 
@@ -57,5 +62,18 @@ class ArticleParser:
             encoding="utf-8"
         )
 
-        return len(words)
+        return soup
 
+    # --auto-count-words
+    def get_words_many_times(self, phrase, depth, wait_time, use_local_html_file_instead=False):
+        print(phrase.replace(" ", "_") + str(depth))
+        soup = self.get_words(phrase, use_local_html_file_instead)
+        links = self.scraper.get_all_links(soup)
+        
+        if depth == 0:
+            return
+
+        for link in links:
+            time.sleep(wait_time)
+            self.get_words_many_times(link.replace("/wiki/", ""), depth - 1, wait_time)
+        
