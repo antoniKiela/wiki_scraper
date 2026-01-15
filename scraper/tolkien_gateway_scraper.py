@@ -1,4 +1,4 @@
-from wiki_scraper.scraper.base_scraper import BasicScraper
+from scraper.base_scraper import BasicScraper
 import re 
 from bs4 import BeautifulSoup
 import pandas as pd

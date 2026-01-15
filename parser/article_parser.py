@@ -1,4 +1,4 @@
-from wiki_scraper.scraper.base_scraper import BasicScraper
+from scraper.base_scraper import BasicScraper
 from bs4 import BeautifulSoup
 from pathlib import Path
 import json

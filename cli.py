@@ -101,8 +101,8 @@ class CLIArgumentParser:
         general_group = parser.add_argument_group('General options')
         general_group.add_argument(
             "--wiki",
-            default="minecraft_wiki",
-            help='Wiki to use. For default set on "minecraft_wiki"\n'
+            default="tolkien_gateway",
+            help='Wiki to use. For default set on "tolkien_gateway"\n'
         )
 
         return parser
