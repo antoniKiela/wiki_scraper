@@ -31,7 +31,7 @@ class ArticleParser:
         return self.scraper.get_first_paragraph(soup)
 
     # --table
-    def get_table(self, phrase, number, first_row_is_header, use_local_html_file_instead=False):
+    def get_table(self, phrase, number, first_row_is_header=False, use_local_html_file_instead=False):
         soup = self.get_soup(phrase, use_local_html_file_instead)
 
         df = self.scraper.get_nth_table(soup, number - 1)
@@ -70,7 +70,7 @@ class ArticleParser:
 
     # --auto-count-words
     def get_words_many_times(self, phrase, depth, wait_time, use_local_html_file_instead=False):
-        print(phrase.replace(" ", "_") + str(depth))
+        print(phrase.replace(" ", "_"))
         soup = self.get_words(phrase, use_local_html_file_instead)
         links = self.scraper.get_all_links(soup)
         

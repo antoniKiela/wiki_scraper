@@ -131,10 +131,17 @@ class CLIArgumentParser:
                 self.parser.error(f"{opt_name} requires --analyze-relative-word-frequency")
         
         if args.analyze_relative_word_frequency:
-            if not (args.summary or args.count_words or args.auto_count_words):
+            if not (args.mode and args.count):
                 self.parser.error(
-                    "--analyze-relative-word-frequency requires one of:\n"
-                    "  --summary, --count-words, or --auto-count-words"
+                    "--analyze-relative-word-frequency requires:\n"
+                    "  --mode, --count"
+                )
+
+        if args.auto_count_words:
+            if not (args.depth and args.wait):
+                self.parser.error(
+                    "--auto-count-words requires:\n"
+                    "  --depth, --wait"
                 )
         
         return args
