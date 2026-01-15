@@ -86,4 +86,8 @@ class TolkienGatewayScraper(BasicScraper):
 
         return links
 
+    # --analyze-relative-word-frequency
+    def get_language(self):
+        return 'en'
+
         

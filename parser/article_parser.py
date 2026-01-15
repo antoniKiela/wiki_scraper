@@ -3,6 +3,10 @@ from bs4 import BeautifulSoup
 from pathlib import Path
 import json
 import time
+from wordfreq import top_n_list, zipf_frequency
+import matplotlib.pyplot as plt
+import pandas as pd
+import random
 
 class ArticleParser:
     def __init__(self, scraper):
@@ -77,3 +81,64 @@ class ArticleParser:
             time.sleep(wait_time)
             self.get_words_many_times(link.replace("/wiki/", ""), depth - 1, wait_time)
         
+    def get_relative_word_frequency(self, mode, count, path_to_chart="", get_better_table=False,):
+        # Article table
+        with open("word-counts.json", "r", encoding="utf-8") as f:
+            article_counts = json.load(f)
+
+        article_series = pd.Series(article_counts, dtype=float)
+        if not article_series.empty:
+            article_series /= article_series.max()
+
+        if get_better_table == True:
+            article_series = article_series[article_series > 0.05]
+
+        # Language table
+        language = self.scraper.get_language()
+
+        language_freqs = {}
+        language_words = top_n_list(language, max(10000, count))
+        for word in language_words:
+            language_freqs[word] = zipf_frequency(word, language)
+
+        language_series = pd.Series(language_freqs, dtype=float)
+        if not language_series.empty:
+            language_series /= language_series.max()
+
+        # Getting the words for table. (Half from language, half from article)
+        half = count // 2
+
+        sample_article = random.sample(
+            list(article_series.index),
+            min(half, len(article_series))
+        )
+
+        sample_language = random.sample(
+            list(language_series.index),
+            min(count - half, len(language_series))
+        )
+
+        words = list(set(sample_article + sample_language))
+
+        # Creating final table
+        df = pd.DataFrame({"word": words})
+        df["frequency in article"] = df["word"].map(article_series)
+        df["frequency in wiki language"] = df["word"].map(language_series)
+
+        if mode == "article":
+            df = df.sort_values(by="frequency in article", ascending=False)
+        elif mode == "language":
+            df = df.sort_values(by="frequency in wiki language", ascending=False)
+
+        # Creating chart if necesarry
+        if path_to_chart:
+            df.set_index("word").plot(kind="bar", figsize=(10, 5))
+            plt.title("Relative word frequency comparison")
+            plt.ylabel("Normalized frequency")
+            plt.tight_layout()
+            plt.savefig(path_to_chart)
+            plt.close()
+
+        return df
+
+

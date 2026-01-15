@@ -78,4 +78,8 @@ class BasicScraper(ABC):
     def get_all_links(self, soup):
         pass
 
+    @abstractmethod
+    def get_language(self):
+        pass
+
         
