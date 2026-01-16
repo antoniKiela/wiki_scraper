@@ -3,6 +3,7 @@ from scraper.tolkien_gateway_scraper import TolkienGatewayScraper
 from parser.article_parser import ArticleParser
 import sys
 import pandas
+from pathlib import Path
 
 def main():
     # Parse arguments
@@ -23,22 +24,37 @@ def main():
     parser = ArticleParser(scraper)
 
     if args.summary:
-        summary = parser.get_summary(args.summary)
-        print(summary)
+        try:
+            summary = parser.get_summary(args.summary)
+            print(summary)
+        except ConnectionError as e:
+            print("No page found", file=sys.stderr)
     elif args.table:
-        table = parser.get_table(args.table, args.number)
-        table_name = args.table + '.csv'
-        table.to_csv(table_name, index=False)
-        print(table)
+        try:
+            table = parser.get_table(args.table, args.number)
+            table_name = args.table + '.csv'
+            table.to_csv(table_name, index=False)
+            print(table)
+        except ConnectionError as e:
+            print("No page found", file=sys.stderr)
     elif args.count_words:
-        parser.get_words(args.count_words)
+        try:
+            parser.get_words(args.count_words)
+        except ConnectionError as e:
+            print("No page found", file=sys.stderr)
     elif args.analyze_relative_word_frequency:
-        if args.chart:
-            parser.get_relative_word_frequency(args.mode, args.count, path_to_chart=args.chart)
+        if Path("word-counts.json").exists():
+            if args.chart:
+                parser.get_relative_word_frequency(args.mode, args.count, path_to_chart=args.chart)
+            else:
+                parser.get_relative_word_frequency(args.mode, args.count)
         else:
-            parser.get_relative_word_frequency(args.mode, args.count)
+            print("No word-counts.json file is in current directory", file=sys.stderr)
     elif args.auto_count_words:
-        parser.get_words_many_times(args.auto_count_words, args.depth, args.wait)
+        try:
+            parser.get_words_many_times(args.auto_count_words, args.depth, args.wait)
+        except ConnectionError as e:
+            print("No page found", file=sys.stderr)
 
 
 

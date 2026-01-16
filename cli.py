@@ -10,11 +10,11 @@ class CLIArgumentParser:
             prog='wiki_scraper',
             description='Scrape and analyze data from wikis.',
             epilog='''Examples:
-  wiki_scraper --summary "Pickaxe"
-  wiki_scraper --table "Goat" --number 3
-  wiki_scraper --count-words "Desert Pyramid"
-  wiki_scraper --summary "Iron" --analyze-relative-word-frequency --count 10 --chart output.png
-  wiki_scraper --auto-count-words "Minecraft" --depth 2 --wait 2.0
+  wiki_scraper --summary "Bilbo Baggins"
+  wiki_scraper --table "Fellowship of the Ring" --number 3
+  wiki_scraper --count-words "Balrog"
+  wiki_scraper --analyze-relative-word-frequency --count 10 --chart output.png
+  wiki_scraper --auto-count-words "Gandalf" --depth 2 --wait 2.0
 ''',
             formatter_class=argparse.RawTextHelpFormatter
         )
@@ -129,6 +129,12 @@ class CLIArgumentParser:
         for opt_name, opt_val in analyze_opts:
             if opt_val is not None and not args.analyze_relative_word_frequency:
                 self.parser.error(f"{opt_name} requires --analyze-relative-word-frequency")
+
+        if args.table and not args.number:
+            self.parser.error(
+                    "--table requires:\n"
+                    "  --number"
+                )
         
         if args.analyze_relative_word_frequency:
             if not (args.mode and args.count):
