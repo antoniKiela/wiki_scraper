@@ -45,9 +45,10 @@ def main():
     elif args.analyze_relative_word_frequency:
         if Path("word-counts.json").exists():
             if args.chart:
-                parser.get_relative_word_frequency(args.mode, args.count, path_to_chart=args.chart)
+                table = parser.get_relative_word_frequency(args.mode, args.count, path_to_chart=args.chart)
             else:
-                parser.get_relative_word_frequency(args.mode, args.count)
+                table = parser.get_relative_word_frequency(args.mode, args.count)
+            print(table)
         else:
             print("No word-counts.json file is in current directory", file=sys.stderr)
     elif args.auto_count_words:
