@@ -1,11 +1,15 @@
-from cli import CLIArgumentParser
-from scraper.tolkien_gateway_scraper import TolkienGatewayScraper
-from parser.article_parser import ArticleParser
 import sys
-import pandas
 from pathlib import Path
 
+import pandas
+
+from cli import CLIArgumentParser
+from parser.article_parser import ArticleParser
+from scraper.tolkien_gateway_scraper import TolkienGatewayScraper
+
+
 def main():
+    """Main function to run the Tolkien Gateway analysis tool."""
     # Parse arguments
     argument_parser = CLIArgumentParser()
     args = argument_parser.parse_arguments()
@@ -19,6 +23,7 @@ def main():
         scraper = TolkienGatewayScraper()
     else:
         print("No wiki found", file=sys.stderr)
+        return
 
     # Initiate parser
     parser = ArticleParser(scraper)
@@ -27,38 +32,47 @@ def main():
         try:
             summary = parser.get_summary(args.summary)
             print(summary)
-        except ConnectionError as e:
+        except ConnectionError:
             print("No page found", file=sys.stderr)
+    
     elif args.table:
         try:
             table = parser.get_table(args.table, args.number)
             table_name = args.table + '.csv'
             table.to_csv(table_name, index=False)
             print(table)
-        except ConnectionError as e:
+        except ConnectionError:
             print("No page found", file=sys.stderr)
+    
     elif args.count_words:
         try:
             parser.get_words(args.count_words)
-        except ConnectionError as e:
+        except ConnectionError:
             print("No page found", file=sys.stderr)
+    
     elif args.analyze_relative_word_frequency:
         if Path("word-counts.json").exists():
             if args.chart:
-                table = parser.get_relative_word_frequency(args.mode, args.count, path_to_chart=args.chart)
+                table = parser.get_relative_word_frequency(
+                    args.mode, args.count, path_to_chart=args.chart
+                )
             else:
                 table = parser.get_relative_word_frequency(args.mode, args.count)
             print(table)
         else:
-            print("No word-counts.json file is in current directory", file=sys.stderr)
+            print(
+                "No word-counts.json file is in current directory",
+                file=sys.stderr
+            )
+    
     elif args.auto_count_words:
         try:
-            parser.get_words_many_times(args.auto_count_words, args.depth, args.wait)
-        except ConnectionError as e:
+            parser.get_words_many_times(
+                args.auto_count_words, args.depth, args.wait
+            )
+        except ConnectionError:
             print("No page found", file=sys.stderr)
 
 
-
-
-
-main()
+if __name__ == "__main__":
+    main()
