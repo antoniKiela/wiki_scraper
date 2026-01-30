@@ -73,6 +73,7 @@ def main():
         except ConnectionError:
             print("No page found", file=sys.stderr)
 
+    scraper.close()
 
 if __name__ == "__main__":
     main()
