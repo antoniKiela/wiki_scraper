@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
+import time
+
 import requests
 from bs4 import BeautifulSoup
-import time
 
 class BasicScraper(ABC):
     def __init__(self, base_URL, request_timeout, user_agent, rate_limit):
@@ -11,7 +12,6 @@ class BasicScraper(ABC):
         self.rate_limit = rate_limit
 
         self.session = requests.Session() 
-
         self.session.headers.update({
             'User-Agent' : self.user_agent
         })
