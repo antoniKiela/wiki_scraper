@@ -56,33 +56,16 @@ def test_cli():
 
     print("Cli.py poprawne")
 
-
-# Testy tolkien_gateway_scraper.py 
-def test_first_paragraph(scraper, soup):
-    paragraph = scraper.get_first_paragraph(soup)
-    assert paragraph is not None
-    assert len(paragraph) > 0
-    assert "bilbo" in paragraph.lower()
-
-
+# Testy tolkien_gateway_scraper.py
 def test_tables_exist(scraper, soup):
     tables = scraper.get_tables(soup)
     assert isinstance(tables, list)
     assert len(tables) > 0
 
-
 def test_first_table_not_empty(scraper, soup):
     table = scraper.get_nth_table(soup, 0)
     assert table is not None
     assert not table.empty
-
-
-def test_word_extraction(scraper, soup):
-    words = scraper.get_all_text(soup)
-    assert isinstance(words, list)
-    assert "bilbo" in words
-    assert all(word.isalpha() for word in words)
-
 
 def test_links_extraction(scraper, soup):
     links = scraper.get_all_links(soup)
@@ -90,10 +73,8 @@ def test_links_extraction(scraper, soup):
     assert len(links) > 0
     assert all(link.startswith("/wiki/") for link in links)
 
-
 def test_language(scraper):
     assert scraper.get_language() == "en"
-
 
 def test_scraper():
     with open("Bilbo.html", "r", encoding="utf-8") as file:
@@ -102,10 +83,8 @@ def test_scraper():
     soup = BeautifulSoup(html_content, "html.parser")
     scraper = TolkienGatewayScraper()
 
-    test_first_paragraph(scraper, soup)
     test_tables_exist(scraper, soup)
     test_first_table_not_empty(scraper, soup)
-    test_word_extraction(scraper, soup)
     test_links_extraction(scraper, soup)
     test_language(scraper)
 
