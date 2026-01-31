@@ -9,7 +9,6 @@ from scraper.tolkien_gateway_scraper import TolkienGatewayScraper
 
 
 def main():
-    """Main function to run the Tolkien Gateway analysis tool."""
     # Parse arguments
     argument_parser = CLIArgumentParser()
     args = argument_parser.parse_arguments()

@@ -10,12 +10,12 @@ class CLIArgumentParser:
             prog='wiki_scraper',
             description='Scrape and analyze data from wikis.',
             epilog=(
-                "Examples:\n"
-                "  wiki_scraper --summary \"Bilbo Baggins\"\n"
-                "  wiki_scraper --table \"Fellowship of the Ring\" --number 3\n"
-                "  wiki_scraper --count-words \"Balrog\"\n"
-                "  wiki_scraper --analyze-relative-word-frequency --count 10 --chart output.png\n"
-                "  wiki_scraper --auto-count-words \"Gandalf\" --depth 2 --wait 2.0\n"
+                'Examples:\n'
+                '  wiki_scraper --summary "Bilbo Baggins"\n'
+                '  wiki_scraper --table "Fellowship of the Ring" --number 3\n'
+                '  wiki_scraper --count-words "Balrog"\n'
+                '  wiki_scraper --analyze-relative-word-frequency --count 10 --chart output.png\n'
+                '  wiki_scraper --auto-count-words "Gandalf" --depth 2 --wait 2.0\n'
             ),
             formatter_class=argparse.RawTextHelpFormatter
         )

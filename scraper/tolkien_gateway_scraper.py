@@ -2,7 +2,7 @@ from scraper.base_scraper import BasicScraper
 import re 
 from bs4 import BeautifulSoup
 import pandas as pd
-from io import StringIO ## bo df = pd.read_html(str(table))[0] bylo deprecated
+from io import StringIO 
 
 class TolkienGatewayScraper(BasicScraper):
     def __init__(self):
