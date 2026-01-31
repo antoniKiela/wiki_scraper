@@ -2,7 +2,7 @@
 
 ## Struktura Repozytorium
 
-### Plik Główne
+### Plik Główny
 - **wiki_scraper.py** – Główny punkt wejścia aplikacji. Musi być uruchamiany z katalogu głównego projektu.
 
 ### Moduły
